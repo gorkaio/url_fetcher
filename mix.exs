@@ -38,7 +38,10 @@ defmodule Fetcher.MixProject do
     [
       {:ex_doc, "~> 0.22", only: :dev, runtime: false},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:mox, "~> 0.5", only: :test},
+      {:httpoison, "~> 1.6"},
+      {:floki, "~> 0.27.0"}
     ]
   end
 end
