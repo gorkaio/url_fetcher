@@ -14,7 +14,8 @@ defmodule Fetcher.MixProject do
       source_url: "https://github.com/gorkaio/fetcher",
       homepage_url: "https://github.com/gorkaio/fetcher",
       docs: [
-        main: "Fetcher", # The main page in the docs
+        # The main page in the docs
+        main: "Fetcher",
         extras: ["README.md"]
       ]
     ]
@@ -31,7 +32,8 @@ defmodule Fetcher.MixProject do
   defp deps do
     [
       {:ex_doc, "~> 0.22", only: :dev, runtime: false},
-      {:credo, "~> 1.4", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
 end
