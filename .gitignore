@@ -22,3 +22,11 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 fetcher-*.tar
 
+# Ignore language server
+.elixir_ls/
+
+# Ignore OS and IDE files
+.DS_Store
+.vscode
+.idea
+
