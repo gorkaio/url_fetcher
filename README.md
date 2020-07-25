@@ -1,5 +1,7 @@
 # Fetcher
 
+![Tests](https://github.com/gorkaio/fetcher/workflows/verify/badge.svg)
+
 _Fetcher_ fetches URLs present in image and anchor tags in a given URL.
 
 ## Installation

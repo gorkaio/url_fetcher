@@ -6,7 +6,6 @@ defmodule Fetcher do
 
   @doc """
   Fetch image and link tags URLs.
-  Let's make a silly change to trigger pipeline again
 
   ## Parameters
 
