@@ -22,8 +22,10 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 fetcher-*.tar
 
-# Ignore language server
+# Ignore language server and dialyzer
 .elixir_ls/
+/priv/plts/*.plt
+/priv/plts/*.plt.hash
 
 # Ignore OS and IDE files
 .DS_Store

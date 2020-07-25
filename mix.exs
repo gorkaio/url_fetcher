@@ -17,6 +17,11 @@ defmodule Fetcher.MixProject do
         # The main page in the docs
         main: "Fetcher",
         extras: ["README.md"]
+      ],
+
+      # Dialyzer
+      dialyzer: [
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
       ]
     ]
   end
