@@ -6,7 +6,10 @@ defmodule Fetcher.Http.Adapter.Poison do
 
   def get(url, opts \\ []) do
     {headers, opts} = Keyword.pop(opts, :headers, [])
-    {:ok, response} = HTTPoison.get(url, headers, opts)
+
+    {:ok, response} =
+      HTTPoison.get(url, headers, opts |> Keyword.put_new(:follow_redirect, true) |> Keyword.put_new(:max_redirect, 3))
+
     response.body
   end
 end
