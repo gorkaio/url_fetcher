@@ -1,18 +1,22 @@
 defmodule Fetcher do
   @moduledoc """
-  Documentation for `Fetcher`.
+  `Fetcher` fetches image and link URLs from a given page URL.
   """
+  @type url() :: String.t()
 
   @doc """
-  Hello world.
+  Fetch image and link tags URLs.
 
   ## Examples
 
-      iex> Fetcher.hello()
-      :world
+      iex> Fetcher.fetch("https://google.com")
+      :ok
 
   """
-  def hello do
-    :world
+  @spec fetch(url()) :: :ok
+  def fetch(url) when is_binary(url) do
+    :ok
   end
+
+  def fetch(_url) do {:error, :invalid_url} end
 end
