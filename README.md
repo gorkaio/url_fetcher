@@ -1,6 +1,6 @@
 # Fetcher
 
-**TODO: Add description**
+_Fetcher_ fetches URLs present in image and anchor tags in a given URL.
 
 ## Installation
 
