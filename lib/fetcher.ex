@@ -1,7 +1,9 @@
 defmodule Fetcher do
   @moduledoc """
-  `Fetcher` fetches image and link URLs from a given page URL.
+  Fetches asset and link URLs from a given page URL.
   """
+  alias Fetcher.Http.Client, as: HttpClient
+  alias Fetcher.SiteData
 
   @default_http_client Fetcher.Http.Adapter.Poison
 
@@ -13,15 +15,14 @@ defmodule Fetcher do
     - url: String that represents the URL to parse
 
   """
-  @spec fetch(Fetcher.Http.Client.url(), list) ::
-          {:ok, Fetcher.Http.Client.body()} | {:error, term}
+  @spec fetch(HttpClient.url(), key: any()) :: {:ok, SiteData.t()} | {:error, term}
   def fetch(url, opts \\ [])
 
   def fetch(url, opts) when is_binary(url) do
     {client, opts} = Keyword.pop(opts, :http_client, @default_http_client)
 
     with {:ok, document} <- client.get(url, opts), {:ok, html} <- Floki.parse_document(document) do
-      {:ok, images(html), links(html)}
+      {:ok, SiteData.new() |> SiteData.with_assets(images(html)) |> SiteData.with_links(links(html))}
     end
   end
 
@@ -30,12 +31,14 @@ defmodule Fetcher do
   end
 
   defp images(html) do
-    Floki.find(html, "img")
+    html
+    |> Floki.find("img")
     |> Floki.attribute("src")
   end
 
   defp links(html) do
-    Floki.find(html, "a")
+    html
+    |> Floki.find("a")
     |> Floki.attribute("href")
   end
 end

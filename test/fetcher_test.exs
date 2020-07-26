@@ -3,6 +3,7 @@ defmodule FetcherTest do
   use ExUnit.Case, async: true
   doctest Fetcher
   import Mox
+  alias Fetcher.SiteData
 
   @url "https://gorka.io/about/"
 
@@ -18,7 +19,10 @@ defmodule FetcherTest do
     Fetcher.HttpClientMock
     |> expect(:get, fn @url, _options -> {:ok, html} end)
 
-    assert Fetcher.fetch(@url, http_client: Fetcher.HttpClientMock) == {:ok, [], []}
+    expected = {:ok, SiteData.new()}
+    actual = Fetcher.fetch(@url, http_client: Fetcher.HttpClientMock)
+
+    assert expected == actual
   end
 
   test "Reads single image from html pages" do
@@ -27,8 +31,10 @@ defmodule FetcherTest do
     Fetcher.HttpClientMock
     |> expect(:get, fn @url, _options -> {:ok, html} end)
 
-    assert Fetcher.fetch(@url, http_client: Fetcher.HttpClientMock) ==
-             {:ok, ["https://www.elixirconf.eu/assets/images/logo.svg"], []}
+    expected = {:ok, SiteData.new() |> SiteData.with_assets(["https://www.elixirconf.eu/assets/images/logo.svg"])}
+    actual = Fetcher.fetch(@url, http_client: Fetcher.HttpClientMock)
+
+    assert expected == actual
   end
 
   test "Reads single link from html pages" do
@@ -37,8 +43,10 @@ defmodule FetcherTest do
     Fetcher.HttpClientMock
     |> expect(:get, fn @url, _options -> {:ok, html} end)
 
-    assert Fetcher.fetch(@url, http_client: Fetcher.HttpClientMock) ==
-             {:ok, [], ["https://www.elixirconf.eu"]}
+    expected = {:ok, SiteData.new() |> SiteData.with_links(["https://www.elixirconf.eu"])}
+    actual = Fetcher.fetch(@url, http_client: Fetcher.HttpClientMock)
+
+    assert expected == actual
   end
 
   test "Reads multiple images and links from html pages" do
@@ -47,9 +55,15 @@ defmodule FetcherTest do
     Fetcher.HttpClientMock
     |> expect(:get, fn @url, _options -> {:ok, html} end)
 
-    assert Fetcher.fetch(@url, http_client: Fetcher.HttpClientMock) ==
-             {:ok, ["https://www.elixirconf.eu/assets/images/logo.svg", "/images/logo/logo.png"],
-              ["#books", "#courses", "#other-resources", "#screencasts", "#in-depth-resources"]}
+    expected =
+      {:ok,
+       SiteData.new()
+       |> SiteData.with_links(["#books", "#courses", "#other-resources"])
+       |> SiteData.with_assets(["https://www.elixirconf.eu/assets/images/logo.svg", "/images/logo/logo.png"])}
+
+    actual = Fetcher.fetch(@url, http_client: Fetcher.HttpClientMock)
+
+    assert expected == actual
   end
 
   defp data(test) do
