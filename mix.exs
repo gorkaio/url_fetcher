@@ -1,4 +1,5 @@
 defmodule Fetcher.MixProject do
+  @moduledoc false
   use Mix.Project
 
   def project do
@@ -21,25 +22,29 @@ defmodule Fetcher.MixProject do
 
       # Dialyzer
       dialyzer: [
-        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
+        plt_add_deps: :transitive
       ]
     ]
   end
 
-  # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      mod: {Fetcher.Application, [env: Mix.env()]},
+      applications: applications(Mix.env())
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
+  defp applications(:test), do: applications(:default) ++ [:cowboy, :plug]
+  defp applications(_), do: [:httpoison]
+
   defp deps do
     [
       {:ex_doc, "~> 0.22", only: :dev, runtime: false},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
-      {:mox, "~> 0.5", only: :test},
+      {:plug_cowboy, "~> 2.0"},
       {:httpoison, "~> 1.6"},
       {:floki, "~> 0.27.0"}
     ]

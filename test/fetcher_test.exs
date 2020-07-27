@@ -2,81 +2,76 @@ defmodule FetcherTest do
   @moduledoc false
   use ExUnit.Case, async: true
   doctest Fetcher
-  import Mox
   alias Fetcher.SiteData
+  alias Plug.Conn.Query
 
-  @url "https://gorka.io/about/"
+  @base_url "http://localhost:8081/"
+  @test_url @base_url <> "test"
+  @redirect_url @base_url <> "redirect"
+  @failure_url @base_url <> "failure"
 
-  setup :verify_on_exit!
-
-  test "Rejects invalid URLs" do
-    assert Fetcher.fetch(5) == {:error, :invalid_url}
+  test "Rejects invalid uls" do
+    assert {:error, :invalid_url} == Fetcher.fetch(5, http_client: Fetcher.Http.Adapter.Poison)
   end
 
-  test "Returns empty lists for pages without images or links" do
-    html = data("empty")
-
-    Fetcher.HttpClientMock
-    |> expect(:get, fn @url, _options -> {:ok, html} end)
-
+  test "Returns empty lists for pages without links or images" do
     expected = {:ok, SiteData.new()}
-    actual = Fetcher.fetch(@url, http_client: Fetcher.HttpClientMock)
+    actual = Fetcher.fetch(@test_url, http_client: Fetcher.Http.Adapter.Poison)
 
     assert expected == actual
   end
 
-  test "Reads single image from html pages" do
-    html = data("image_only")
+  test "Returns lists of assets and links" do
+    links = ["https://gorka.io", "https://gorka.io/about"]
+    assets = ["https://gorka.io/logo.svg", "https://gorka.io/logo2.png"]
+    params = %{links: links, assets: assets}
 
-    Fetcher.HttpClientMock
-    |> expect(:get, fn @url, _options -> {:ok, html} end)
+    url =
+      @test_url
+      |> URI.parse()
+      |> Map.put(:query, Query.encode(params))
+      |> URI.to_string()
 
-    expected = {:ok, SiteData.new() |> SiteData.with_assets(["https://www.elixirconf.eu/assets/images/logo.svg"])}
-    actual = Fetcher.fetch(@url, http_client: Fetcher.HttpClientMock)
-
-    assert expected == actual
-  end
-
-  test "Reads single link from html pages" do
-    html = data("link_only")
-
-    Fetcher.HttpClientMock
-    |> expect(:get, fn @url, _options -> {:ok, html} end)
-
-    expected = {:ok, SiteData.new() |> SiteData.with_links(["https://www.elixirconf.eu"])}
-    actual = Fetcher.fetch(@url, http_client: Fetcher.HttpClientMock)
+    expected = {:ok, SiteData.new() |> SiteData.with_links(links) |> SiteData.with_assets(assets)}
+    actual = Fetcher.fetch(url, http_client: Fetcher.Http.Adapter.Poison)
 
     assert expected == actual
   end
 
-  test "Reads multiple images and links from html pages" do
-    html = data("images_and_links")
+  test "Follows redirects" do
+    links = ["https://gorka.io", "https://gorka.io/about"]
+    assets = ["https://gorka.io/logo.svg", "https://gorka.io/logo2.png"]
+    params = %{links: links, assets: assets}
 
-    Fetcher.HttpClientMock
-    |> expect(:get, fn @url, _options -> {:ok, html} end)
+    redirect_to =
+      @test_url
+      |> URI.parse()
+      |> Map.put(:query, Query.encode(params))
+      |> URI.to_string()
 
-    expected =
-      {:ok,
-       SiteData.new()
-       |> SiteData.with_links(["#books", "#courses", "#other-resources"])
-       |> SiteData.with_assets(["https://www.elixirconf.eu/assets/images/logo.svg", "/images/logo/logo.png"])}
+    url =
+      @redirect_url
+      |> URI.parse()
+      |> Map.put(:query, Query.encode(%{page: redirect_to}))
+      |> URI.to_string()
 
-    actual = Fetcher.fetch(@url, http_client: Fetcher.HttpClientMock)
+    expected = {:ok, SiteData.new() |> SiteData.with_links(links) |> SiteData.with_assets(assets)}
+    actual = Fetcher.fetch(url, http_client: Fetcher.Http.Adapter.Poison)
 
     assert expected == actual
   end
 
-  defp data(test) do
-    {:ok, content} =
-      Path.expand(__DIR__)
-      |> Path.join("data")
-      |> Path.join(filename(test))
-      |> File.read()
+  test "Returns error for failed requests" do
+    expected = {:error, 404}
 
-    content
-  end
+    url =
+      @failure_url
+      |> URI.parse()
+      |> Map.put(:query, Query.encode(%{status: 404}))
+      |> URI.to_string()
 
-  defp filename(test) do
-    "test_" <> test <> ".html"
+    actual = Fetcher.fetch(url, http_client: Fetcher.Http.Adapter.Poison)
+
+    assert expected == actual
   end
 end

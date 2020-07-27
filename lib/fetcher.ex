@@ -21,8 +21,13 @@ defmodule Fetcher do
   def fetch(url, opts) when is_binary(url) do
     {client, opts} = Keyword.pop(opts, :http_client, @default_http_client)
 
-    with {:ok, document} <- client.get(url, opts), {:ok, html} <- Floki.parse_document(document) do
+    with {:fetch, {:ok, document}} <- {:fetch, client.get(url, opts)},
+         {:parse, {:ok, html}} <- {:parse, Floki.parse_document(document)} do
       {:ok, SiteData.new() |> SiteData.with_assets(images(html)) |> SiteData.with_links(links(html))}
+    else
+      {:fetch, {:error, reason}} -> {:error, reason}
+      {:parse, {:error, reason}} -> {:error, reason}
+      _ -> {:error, :unknown}
     end
   end
 
