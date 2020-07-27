@@ -7,7 +7,8 @@ defmodule Fetcher do
 
   @default_opts [
     http_client: Fetcher.Http.Adapter.Poison,
-    unique: true
+    unique: true,
+    normalize: :original
   ]
 
   @doc """
@@ -17,6 +18,7 @@ defmodule Fetcher do
 
     - http_client: HTTP Client to be used. Must comply with `Fetcher.Http.Client` behaviour. Defaults to `Fetcher.Http.Adapter.Poison`.
     - unique: boolean. If set, removes duplicates from results. Defaults to `true`.
+    - normalize: transforms all urls to absolute if set to :absolute, or leaves them as they are with :original. Defaults to `original`.
 
     ## Parameters
 
@@ -31,13 +33,14 @@ defmodule Fetcher do
     opts = Keyword.merge(@default_opts, opts)
     client = Keyword.get(opts, :http_client)
     unique = Keyword.get(opts, :unique)
+    normalize = Keyword.get(opts, :normalize)
 
     with {:fetch, {:ok, document}} <- {:fetch, client.get(url)},
          {:parse, {:ok, html}} <- {:parse, Floki.parse_document(document)} do
       data =
         SiteData.new()
-        |> SiteData.with_assets(assets(html, unique))
-        |> SiteData.with_links(links(html, unique))
+        |> SiteData.with_assets(assets(html, unique) |> Enum.map(&normalize(&1, url, normalize)))
+        |> SiteData.with_links(links(html, unique) |> Enum.map(&normalize(&1, url, normalize)))
 
       {:ok, data}
     else
@@ -60,6 +63,17 @@ defmodule Fetcher do
     case unique do
       true -> Enum.uniq(items)
       _ -> items
+    end
+  end
+
+  defp normalize(url, _base_url, :original), do: url
+
+  defp normalize(url, base_url, :absolute) do
+    %{host: url_host} = URI.parse(url)
+
+    case url_host do
+      nil -> URI.merge(base_url, url) |> URI.to_string()
+      _ -> url
     end
   end
 

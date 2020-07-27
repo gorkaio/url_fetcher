@@ -6,9 +6,9 @@ defmodule FetcherTest do
   alias Plug.Conn.Query
 
   @base_url "http://localhost:8081/"
-  @test_url @base_url <> "test"
-  @redirect_url @base_url <> "redirect"
-  @failure_url @base_url <> "failure"
+  @test_url @base_url <> "test/"
+  @redirect_url @base_url <> "redirect/"
+  @failure_url @base_url <> "failure/"
 
   test "Rejects invalid uls" do
     assert {:error, :invalid_url} == Fetcher.fetch(5, http_client: Fetcher.Http.Adapter.Poison)
@@ -34,6 +34,42 @@ defmodule FetcherTest do
 
     expected = {:ok, SiteData.new() |> SiteData.with_links(links) |> SiteData.with_assets(assets)}
     actual = Fetcher.fetch(url, http_client: Fetcher.Http.Adapter.Poison)
+
+    assert expected == actual
+  end
+
+  test "Normalizes lists of assets and links to absolute urls" do
+    links = ["https://gorka.io", "about", "https://elixirforum.com/t/what-elixir-related-stuff-are-you-doing/113"]
+
+    assets = [
+      "logo.svg",
+      "https://gorka.io/logo2.png",
+      "https://elixirforum.com/uploads/default/original/2X/6/69cdf106f7ad3749056956ca28dc41e6b9b6a145.png"
+    ]
+
+    params = %{links: links, assets: assets}
+
+    url =
+      @test_url
+      |> URI.parse()
+      |> Map.put(:query, Query.encode(params))
+      |> URI.to_string()
+
+    expected =
+      {:ok,
+       SiteData.new()
+       |> SiteData.with_links([
+         "https://gorka.io",
+         @test_url <> "about",
+         "https://elixirforum.com/t/what-elixir-related-stuff-are-you-doing/113"
+       ])
+       |> SiteData.with_assets([
+         @test_url <> "logo.svg",
+         "https://gorka.io/logo2.png",
+         "https://elixirforum.com/uploads/default/original/2X/6/69cdf106f7ad3749056956ca28dc41e6b9b6a145.png"
+       ])}
+
+    actual = Fetcher.fetch(url, http_client: Fetcher.Http.Adapter.Poison, normalize: :absolute)
 
     assert expected == actual
   end
