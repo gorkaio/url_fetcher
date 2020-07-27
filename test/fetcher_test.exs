@@ -38,6 +38,52 @@ defmodule FetcherTest do
     assert expected == actual
   end
 
+  test "Removes duplicates from assets and links" do
+    links = ["https://gorka.io", "https://gorka.io/about", "https://gorka.io"]
+    assets = ["https://gorka.io/logo.png", "https://gorka.io/logo.png"]
+    params = %{links: links, assets: assets}
+
+    url =
+      @test_url
+      |> URI.parse()
+      |> Map.put(:query, Query.encode(params))
+      |> URI.to_string()
+
+    expected = {
+      :ok,
+      SiteData.new()
+      |> SiteData.with_links(["https://gorka.io", "https://gorka.io/about"])
+      |> SiteData.with_assets(["https://gorka.io/logo.png"])
+    }
+
+    actual = Fetcher.fetch(url, http_client: Fetcher.Http.Adapter.Poison)
+
+    assert expected == actual
+  end
+
+  test "Duplicate removal is configurable via options" do
+    links = ["https://gorka.io", "https://gorka.io/about", "https://gorka.io"]
+    assets = ["https://gorka.io/logo.png", "https://gorka.io/logo.png"]
+    params = %{links: links, assets: assets}
+
+    url =
+      @test_url
+      |> URI.parse()
+      |> Map.put(:query, Query.encode(params))
+      |> URI.to_string()
+
+    expected = {
+      :ok,
+      SiteData.new()
+      |> SiteData.with_links(links)
+      |> SiteData.with_assets(assets)
+    }
+
+    actual = Fetcher.fetch(url, http_client: Fetcher.Http.Adapter.Poison, unique: false)
+
+    assert expected == actual
+  end
+
   test "Follows redirects" do
     links = ["https://gorka.io", "https://gorka.io/about"]
     assets = ["https://gorka.io/logo.svg", "https://gorka.io/logo2.png"]
