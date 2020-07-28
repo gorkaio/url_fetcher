@@ -6,22 +6,52 @@ on:
       - master
     tags:
       - '*'
+    paths:
+      - '!CONTRIBUTING.md'
+      - '!CODE_OF_CONDUCT.md'
+      - '!LICENSE'
+      - '!README.md'
 
 jobs:
-  publish:
-    name: publish to hex.pm
+  verify:
     runs-on: ubuntu-latest
-    container:
-      image: elixir:1.10.4-slim
+    strategy:
+      matrix:
+        otp: [23.0.2]
+        elixir: [1.10.4]
+
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+      - uses: actions/cache@v1
+        id: deps-cache
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+      - uses: actions/cache@v1
+        id: build-cache
+        with:
+          path: _build
+          key: ${{ runner.os }}-build-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+      - uses: actions/cache@v1
+        id: plts-cache
+        with:
+          path: priv/plts
+          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/priv/plts')) }}
       - name: Install dependencies
         run: |
           mix local.rebar --force
           mix local.hex --force
           mix deps.get
-      - name: Generate docs
-        run: mix docs
+      - name: Format checker
+        run: mix format --check-formatted
+      - name: Test
+        run: mix test
+      - name: Static analysis
+        run: mix dialyzer
       - name: Publish
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}

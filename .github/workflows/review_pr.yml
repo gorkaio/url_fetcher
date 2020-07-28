@@ -1,7 +1,7 @@
-# .github/workflows/verify.yml
+# .github/workflows/review_pr.yml
 
-name: verify
-on: [push, pull_request]
+name: review_pr
+on: [pull_request]
 
 jobs:
   verify:
@@ -17,36 +17,34 @@ jobs:
         with:
           otp-version: ${{ matrix.otp }}
           elixir-version: ${{ matrix.elixir }}
-
       - uses: actions/cache@v1
         id: deps-cache
         with:
           path: deps
           key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-
       - uses: actions/cache@v1
         id: build-cache
         with:
           path: _build
           key: ${{ runner.os }}-build-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-
       - uses: actions/cache@v1
         id: plts-cache
         with:
           path: priv/plts
           key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/priv/plts')) }}
-
       - name: Install dependencies
         run: |
           mix local.rebar --force
           mix local.hex --force
           mix deps.get
-
       - name: Format checker
         run: mix format --check-formatted
-
       - name: Test
         run: mix test
-
       - name: Static analysis
         run: mix dialyzer
+      - name: Credo advices as PR comments
+        uses: red-shirts/reviewdog-action-credo@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
