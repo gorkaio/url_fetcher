@@ -11,7 +11,7 @@ defmodule Fetcher.MixProject do
       deps: deps(),
 
       # Docs
-      name: "URL Fetcher",
+      name: "UrlFetcher",
       description: "Fetches link and image URLs from web pages",
       source_url: "https://github.com/gorkaio/url_fetcher",
       homepage_url: "https://github.com/gorkaio/url_fetcher",

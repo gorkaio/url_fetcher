@@ -20,7 +20,9 @@ jobs:
           mix local.rebar --force
           mix local.hex --force
           mix deps.get
-      - name: publish
+      - name: Generate docs
+        run: mix docs
+      - name: Publish
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
         run: mix hex.publish --yes
