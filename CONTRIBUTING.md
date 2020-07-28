@@ -2,7 +2,7 @@
 
 First things first.... thanks for contributing! 🥳
 
-Before contributing to `url_fetcher`, please make sure to read and agree on our [Code of conduct](https://github.com/gorkaio/url_fetcher/CODE_OF_CONDUCT.md). Please submit any feature requests, bug fixes or other proposals by [submitting an issue](https://github.com/gorkaio/url_fetcher/issues/new) so we can talk and discuss the change before anyone actually spends time implementing it.
+Before contributing to `url_fetcher`, please make sure to read and agree on our [Code of conduct](https://github.com/gorkaio/url_fetcher/blob/master/CODE_OF_CONDUCT.md). Please submit any feature requests, bug fixes or other proposals by [submitting an issue](https://github.com/gorkaio/url_fetcher/issues/new) so we can talk and discuss the change before anyone actually spends time implementing it.
 
 Once we reach an agreement on the change to be implemented, you can submit a pull request.
 
