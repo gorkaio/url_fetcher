@@ -1,8 +1,8 @@
-defmodule FetcherTest do
+defmodule UrlFetcherTest do
   @moduledoc false
   use ExUnit.Case, async: true
-  doctest Fetcher
-  alias Fetcher.SiteData
+  doctest UrlFetcher
+  alias UrlFetcher.SiteData
   alias Plug.Conn.Query
 
   @base_url "http://localhost:8081/"
@@ -11,12 +11,12 @@ defmodule FetcherTest do
   @failure_url @base_url <> "failure/"
 
   test "Rejects invalid uls" do
-    assert {:error, :invalid_url} == Fetcher.fetch(5, http_client: Fetcher.Http.Adapter.Poison)
+    assert {:error, :invalid_url} == UrlFetcher.fetch(5, http_client: UrlFetcher.Http.Adapter.Poison)
   end
 
   test "Returns empty lists for pages without links or images" do
     expected = {:ok, SiteData.new()}
-    actual = Fetcher.fetch(@test_url, http_client: Fetcher.Http.Adapter.Poison)
+    actual = UrlFetcher.fetch(@test_url, http_client: UrlFetcher.Http.Adapter.Poison)
 
     assert expected == actual
   end
@@ -33,7 +33,7 @@ defmodule FetcherTest do
       |> URI.to_string()
 
     expected = {:ok, SiteData.new() |> SiteData.with_links(links) |> SiteData.with_assets(assets)}
-    actual = Fetcher.fetch(url, http_client: Fetcher.Http.Adapter.Poison)
+    actual = UrlFetcher.fetch(url, http_client: UrlFetcher.Http.Adapter.Poison)
 
     assert expected == actual
   end
@@ -69,7 +69,7 @@ defmodule FetcherTest do
          "https://elixirforum.com/uploads/default/original/2X/6/69cdf106f7ad3749056956ca28dc41e6b9b6a145.png"
        ])}
 
-    actual = Fetcher.fetch(url, http_client: Fetcher.Http.Adapter.Poison, normalize: :absolute)
+    actual = UrlFetcher.fetch(url, http_client: UrlFetcher.Http.Adapter.Poison, normalize: :absolute)
 
     assert expected == actual
   end
@@ -92,7 +92,7 @@ defmodule FetcherTest do
       |> SiteData.with_assets(["https://gorka.io/logo.png"])
     }
 
-    actual = Fetcher.fetch(url, http_client: Fetcher.Http.Adapter.Poison)
+    actual = UrlFetcher.fetch(url, http_client: UrlFetcher.Http.Adapter.Poison)
 
     assert expected == actual
   end
@@ -115,7 +115,7 @@ defmodule FetcherTest do
       |> SiteData.with_assets(assets)
     }
 
-    actual = Fetcher.fetch(url, http_client: Fetcher.Http.Adapter.Poison, unique: false)
+    actual = UrlFetcher.fetch(url, http_client: UrlFetcher.Http.Adapter.Poison, unique: false)
 
     assert expected == actual
   end
@@ -138,7 +138,7 @@ defmodule FetcherTest do
       |> URI.to_string()
 
     expected = {:ok, SiteData.new() |> SiteData.with_links(links) |> SiteData.with_assets(assets)}
-    actual = Fetcher.fetch(url, http_client: Fetcher.Http.Adapter.Poison)
+    actual = UrlFetcher.fetch(url, http_client: UrlFetcher.Http.Adapter.Poison)
 
     assert expected == actual
   end
@@ -152,7 +152,7 @@ defmodule FetcherTest do
       |> Map.put(:query, Query.encode(%{status: 404}))
       |> URI.to_string()
 
-    actual = Fetcher.fetch(url, http_client: Fetcher.Http.Adapter.Poison)
+    actual = UrlFetcher.fetch(url, http_client: UrlFetcher.Http.Adapter.Poison)
 
     assert expected == actual
   end

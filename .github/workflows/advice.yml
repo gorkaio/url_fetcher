@@ -1,4 +1,4 @@
-# .github/workflows/suggest.yml
+# .github/workflows/advice.yml
 
 name: advice
 on: [pull_request]

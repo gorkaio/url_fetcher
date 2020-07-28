@@ -1,4 +1,4 @@
-defmodule Fetcher.Http.MockServer do
+defmodule UrlFetcher.Http.MockServer do
   @moduledoc """
   Mock server
 

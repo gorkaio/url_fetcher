@@ -1,7 +1,7 @@
-defmodule Fetcher.Http.Adapter.MockServerTest do
+defmodule UrlFetcher.Http.MockServerTest do
   @moduledoc false
   use ExUnit.Case, async: true
-  doctest Fetcher
+  doctest UrlFetcher.Http.MockServer
   alias Plug.Conn.Query
 
   @base_url "http://localhost:8081/"

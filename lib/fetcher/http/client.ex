@@ -1,4 +1,4 @@
-defmodule Fetcher.Http.Client do
+defmodule UrlFetcher.Http.Client do
   @moduledoc """
   Behaviour adapter for HTTP clients
   """

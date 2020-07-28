@@ -1,4 +1,4 @@
-defmodule Fetcher.Application do
+defmodule UrlFetcher.Application do
   @moduledoc false
 
   use Application
@@ -7,12 +7,12 @@ defmodule Fetcher.Application do
     children =
       case args do
         [env: :prod] -> []
-        [env: :test] -> [{Plug.Cowboy, scheme: :http, plug: Fetcher.Http.MockServer, options: [port: 8081]}]
+        [env: :test] -> [{Plug.Cowboy, scheme: :http, plug: UrlFetcher.Http.MockServer, options: [port: 8081]}]
         [env: :dev] -> []
         [_] -> []
       end
 
-    opts = [strategy: :one_for_one, name: Fetcher.Supervisor]
+    opts = [strategy: :one_for_one, name: UrlFetcher.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end

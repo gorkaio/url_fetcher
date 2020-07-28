@@ -1,12 +1,12 @@
-defmodule Fetcher do
+defmodule UrlFetcher do
   @moduledoc """
   Fetches asset and link URLs from a given page URL.
   """
-  alias Fetcher.Http.Client, as: HttpClient
-  alias Fetcher.SiteData
+  alias UrlFetcher.Http.Client, as: HttpClient
+  alias UrlFetcher.SiteData
 
   @default_opts [
-    http_client: Fetcher.Http.Adapter.Poison,
+    http_client: UrlFetcher.Http.Adapter.Poison,
     unique: true,
     normalize: :original
   ]
@@ -16,7 +16,7 @@ defmodule Fetcher do
 
   Available options:
 
-    - http_client: HTTP Client to be used. Must comply with `Fetcher.Http.Client` behaviour. Defaults to `Fetcher.Http.Adapter.Poison`.
+    - http_client: HTTP Client to be used. Must comply with `UrlFetcher.Http.Client` behaviour. Defaults to `UrlFetcher.Http.Adapter.Poison`.
     - unique: boolean. If set, removes duplicates from results. Defaults to `true`.
     - normalize: transforms all urls to absolute if set to :absolute, or leaves them as they are with :original. Defaults to `original`.
 

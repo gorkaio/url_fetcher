@@ -1,7 +1,7 @@
-defmodule Fetcher.SiteDataTest do
+defmodule UrlFetcher.SiteDataTest do
   @moduledoc false
   use ExUnit.Case, async: true
-  alias Fetcher.SiteData
+  alias UrlFetcher.SiteData
   doctest SiteData
 
   test "Creates new site data" do

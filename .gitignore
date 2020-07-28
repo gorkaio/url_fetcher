@@ -20,7 +20,7 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-fetcher-*.tar
+url_fetcher-*.tar
 
 # Ignore language server and dialyzer
 .elixir_ls/

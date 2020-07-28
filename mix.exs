@@ -4,20 +4,20 @@ defmodule Fetcher.MixProject do
 
   def project do
     [
-      app: :fetcher,
+      app: :url_fetcher,
       version: "0.1.0",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
 
       # Docs
-      name: "Fetcher",
+      name: "URL Fetcher",
       description: "Fetches link and image URLs from web pages",
-      source_url: "https://github.com/gorkaio/fetcher",
-      homepage_url: "https://github.com/gorkaio/fetcher",
+      source_url: "https://github.com/gorkaio/url_fetcher",
+      homepage_url: "https://github.com/gorkaio/url_fetcher",
       docs: [
         # The main page in the docs
-        main: "Fetcher",
+        main: "URL Fetcher",
         extras: ["README.md"]
       ],
 
@@ -33,7 +33,7 @@ defmodule Fetcher.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {Fetcher.Application, [env: Mix.env()]},
+      mod: {UrlFetcher.Application, [env: Mix.env()]},
       applications: applications(Mix.env())
     ]
   end
@@ -45,7 +45,7 @@ defmodule Fetcher.MixProject do
     [
       name: "url_fetcher",
       licenses: ["MIT"],
-      links: %{"Github" => "https://github.com/gorkaio/fetcher"}
+      links: %{"Github" => "https://github.com/gorkaio/url_fetcher"}
     ]
   end
 

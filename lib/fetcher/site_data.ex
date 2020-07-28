@@ -1,4 +1,4 @@
-defmodule Fetcher.SiteData do
+defmodule UrlFetcher.SiteData do
   @moduledoc """
   Holds information about parsed site
   """
@@ -16,11 +16,11 @@ defmodule Fetcher.SiteData do
 
   ## Examples
 
-      iex> Fetcher.SiteData.new()
-      %Fetcher.SiteData{links: [], assets: []}
+      iex> UrlFetcher.SiteData.new()
+      %UrlFetcher.SiteData{links: [], assets: []}
 
   """
-  @spec new :: Fetcher.SiteData.t()
+  @spec new :: UrlFetcher.SiteData.t()
   def new do
     %__MODULE__{links: [], assets: []}
   end
@@ -34,12 +34,12 @@ defmodule Fetcher.SiteData do
 
   ## Examples
 
-      iex> Fetcher.SiteData.new()
-      ...>  |> Fetcher.SiteData.with_links(["https://gorka.io"])
-      %Fetcher.SiteData{links: ["https://gorka.io"], assets: []}
+      iex> UrlFetcher.SiteData.new()
+      ...>  |> UrlFetcher.SiteData.with_links(["https://gorka.io"])
+      %UrlFetcher.SiteData{links: ["https://gorka.io"], assets: []}
 
   """
-  @spec with_links(Fetcher.SiteData.t(), list(String.t())) :: Fetcher.SiteData.t()
+  @spec with_links(UrlFetcher.SiteData.t(), list(String.t())) :: UrlFetcher.SiteData.t()
   def with_links(data, links) do
     %__MODULE__{data | links: links}
   end
@@ -53,12 +53,12 @@ defmodule Fetcher.SiteData do
 
   ## Examples
 
-      iex> Fetcher.SiteData.new()
-      ...>  |> Fetcher.SiteData.with_assets(["https://gorka.io/logo.svg"])
-      %Fetcher.SiteData{links: [], assets: ["https://gorka.io/logo.svg"]}
+      iex> UrlFetcher.SiteData.new()
+      ...>  |> UrlFetcher.SiteData.with_assets(["https://gorka.io/logo.svg"])
+      %UrlFetcher.SiteData{links: [], assets: ["https://gorka.io/logo.svg"]}
 
   """
-  @spec with_assets(Fetcher.SiteData.t(), list(String.t())) :: Fetcher.SiteData.t()
+  @spec with_assets(UrlFetcher.SiteData.t(), list(String.t())) :: UrlFetcher.SiteData.t()
   def with_assets(data, assets) do
     %__MODULE__{data | assets: assets}
   end

@@ -1,12 +1,12 @@
-defmodule Fetcher.Http.Adapter.Poison do
+defmodule UrlFetcher.Http.Adapter.Poison do
   @moduledoc """
   HTTPoison adapter for HttpClient behaviour
   """
-  @behaviour Fetcher.Http.Client
+  @behaviour UrlFetcher.Http.Client
 
   @default_opts [follow_redirect: true, max_redirect: 3]
 
-  @spec get(String.t(), key: any) :: {:ok, Fetcher.Http.Client.body()} | {:error, term}
+  @spec get(String.t(), key: any) :: {:ok, UrlFetcher.Http.Client.body()} | {:error, term}
   def get(url, opts \\ []) do
     {headers, opts} = Keyword.pop(opts, :headers, [])
 
