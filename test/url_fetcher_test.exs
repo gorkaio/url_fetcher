@@ -120,6 +120,29 @@ defmodule UrlFetcherTest do
     assert expected == actual
   end
 
+  test "Filtering out external links is configurable via options" do
+    links = [@base_url, "/about.html", "https://elixir-lang.org/install.html"]
+    assets = [@base_url <> "/logo.png", "https://elixir-lang.org/logo.png", "test/logo.jpg"]
+    params = %{links: links, assets: assets}
+
+    url =
+      @test_url
+      |> URI.parse()
+      |> Map.put(:query, Query.encode(params))
+      |> URI.to_string()
+
+    expected = {
+      :ok,
+      SiteData.new()
+      |> SiteData.with_links([@base_url, "/about.html"])
+      |> SiteData.with_assets([@base_url <> "/logo.png", "test/logo.jpg"])
+    }
+
+    actual = UrlFetcher.fetch(url, http_client: UrlFetcher.Http.Adapter.Poison, internal_only: true)
+
+    assert expected == actual
+  end
+
   test "Follows redirects" do
     links = ["https://gorka.io", "https://gorka.io/about"]
     assets = ["https://gorka.io/logo.svg", "https://gorka.io/logo2.png"]

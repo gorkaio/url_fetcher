@@ -95,4 +95,24 @@ defmodule UrlFetcher.ParserTest do
 
     assert expected == actual
   end
+
+  test "Filtering out external links is configurable via options" do
+    document = """
+    <html>
+      <body>
+        <p><a href="#home">Home</a></p>
+        <p><a href="https://gorka.io/about.html">About</a></p>
+        <p><a href="test/about.html">About test</a></p>
+        <p><a href="https://elixir-lang.org/install.html">Elixir</a></p>
+      </body>
+    </html>
+    """
+
+    {:ok, html} = Floki.parse_document(document)
+
+    expected = ["#home", "https://gorka.io/about.html", "test/about.html"]
+    actual = Parser.parse(html, "https://gorka.io", {"a", "href"}, internal_only: true)
+
+    assert expected == actual
+  end
 end

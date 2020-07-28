@@ -15,6 +15,7 @@ Some options you can provide to the fetcher:
 - `http_client`: HTTP Client to be used. Must comply with `UrlFetcher.Http.Client` behaviour. Defaults to `UrlFetcher.Http.Adapter.Poison`.
 - `unique`: boolean. If set, removes duplicates from results. Defaults to `true`.
 - `normalize`: transforms all urls to absolute if set to `:absolute`, or leaves them as they are with `:original`. Defaults to `original`.
+- `internal_only`: boolean. If set, filters urls to the ones internal to the site being fetched. Defaults to `false`.
 
 ### HTTP Client behaviour
 

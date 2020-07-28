@@ -6,7 +6,8 @@ defmodule UrlFetcher.Parser do
 
   @default_opts [
     unique: true,
-    normalize: :original
+    normalize: :original,
+    internal_only: false
   ]
 
   @doc """
@@ -25,6 +26,7 @@ defmodule UrlFetcher.Parser do
 
     - unique: Boolean. If set, removes duplicates from results. Defaults to `true`.
     - normalize: Atom. Transforms all urls to absolute if set to `:absolute`, or leaves them as they are with `:original`. Defaults to `:original`.
+    - internal_only: Boolean. If set, filters urls to those internal to the site being fetched. Defaults to `false`.
 
   """
   @spec parse(Floki.html_tree(), HttpClient.url(), {String.t(), String.t()}, key: any()) :: [HttpClient.url()]
@@ -34,6 +36,7 @@ defmodule UrlFetcher.Parser do
     grep(html, {tag, attribute})
     |> uniq(Keyword.get(opts, :unique))
     |> Enum.map(&normalize(&1, base_url, Keyword.get(opts, :normalize)))
+    |> filter_internal(base_url, Keyword.get(opts, :internal_only))
   end
 
   defp grep(html, {tag, attribute}) do
@@ -54,5 +57,18 @@ defmodule UrlFetcher.Parser do
       nil -> URI.merge(base_url, url) |> URI.to_string()
       _ -> url
     end
+  end
+
+  defp filter_internal(urls, base_url, true) do
+    urls
+    |> Enum.filter(&is_internal(&1, base_url))
+  end
+
+  defp filter_internal(urls, base_url, _), do: urls
+
+  defp is_internal(url, base_url) do
+    %{host: url_host} = URI.parse(url)
+    %{host: base_host} = URI.parse(base_url)
+    url_host == nil || url_host == base_host
   end
 end
