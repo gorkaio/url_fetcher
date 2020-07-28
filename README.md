@@ -14,7 +14,6 @@ Some options you can provide to the fetcher:
 
 - `http_client`: HTTP Client to be used. Must comply with `Fetcher.Http.Client` behaviour. Defaults to `Fetcher.Http.Adapter.Poison`.
 - `unique`: boolean. If set, removes duplicates from results. Defaults to `true`.
-- `normalize`: If set to `:absolute` makes all urls absolute. `:original` leaves them as they were. Defaults to `:original`.
 
 ### HTTP Client behaviour
 
@@ -22,18 +21,16 @@ HTTP Client behaviour is defined in `Fetcher.Http.Client`. You can choose whatev
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `fetcher` to your list of dependencies in `mix.exs`:
+The package is [available in Hex](https://hex.pm/packages/url_fetcher), and can be installed
+by adding `url_fetcher` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:fetcher, "~> 0.1.0"}
+    {:fetcher, "~> 0.1.0", hex: :url_fetcher}
   ]
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/fetcher](https://hexdocs.pm/fetcher).
+Documentation can be found at [https://hexdocs.pm/url_fetcher/](https://hexdocs.pm/url_fetcher/).
 
