@@ -8,7 +8,7 @@ on:
 jobs:
   publish:
     name: publish to hex.pm
-    runs-on: ubuntu latest
+    runs-on: ubuntu-latest
     container:
       image: elixir:1.10.4-slim
     steps:
