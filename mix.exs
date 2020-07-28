@@ -12,6 +12,7 @@ defmodule Fetcher.MixProject do
 
       # Docs
       name: "Fetcher",
+      description: "Fetches link and image URLs from web pages",
       source_url: "https://github.com/gorkaio/fetcher",
       homepage_url: "https://github.com/gorkaio/fetcher",
       docs: [
@@ -24,7 +25,8 @@ defmodule Fetcher.MixProject do
       dialyzer: [
         plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
         plt_add_deps: :transitive
-      ]
+      ],
+      package: package()
     ]
   end
 
@@ -38,6 +40,14 @@ defmodule Fetcher.MixProject do
 
   defp applications(:test), do: applications(:default) ++ [:cowboy, :plug]
   defp applications(_), do: [:httpoison]
+
+  defp package() do
+    [
+      name: "url_fetcher",
+      licenses: ["MIT"],
+      links: %{"Github" => "https://github.com/gorkaio/fetcher"}
+    ]
+  end
 
   defp deps do
     [
