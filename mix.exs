@@ -17,7 +17,7 @@ defmodule Fetcher.MixProject do
       homepage_url: "https://github.com/gorkaio/url_fetcher",
       docs: [
         # The main page in the docs
-        main: "URL Fetcher",
+        main: "UrlFetcher",
         extras: ["README.md"]
       ],
 
