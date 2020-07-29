@@ -47,6 +47,11 @@ jobs:
         run: mix test
       - name: Static analysis
         run: mix dialyzer
+      - name: Coverage report
+        env:
+          MIX_ENV: test
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mix coveralls.github
       - name: Publish
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}

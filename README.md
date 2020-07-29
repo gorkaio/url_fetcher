@@ -1,6 +1,7 @@
 # UrlFetcher
 
 ![Tests](https://github.com/gorkaio/url_fetcher/workflows/verify/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/gorkaio/url_fetcher/badge.svg?branch=master)](https://coveralls.io/github/gorkaio/url_fetcher?branch=master)
 
 _UrlFetcher_ fetches URLs present in image and anchor tags in a given URL.
 
@@ -48,6 +49,10 @@ _Url Fetcher_ has some automated CI Github actions that will take care of review
 - Submit any code style suggestions and improvements as comments on the PR
 
 Once everything looks good, your PR will be merged. Every push to the main branch will trigger an automated publishing of the package and documentation to [hex](https://hex.pm).
+
+### Test coverage
+
+You can run a test coverage report with `mix coveralls`.
 
 ### Benchmarking
 

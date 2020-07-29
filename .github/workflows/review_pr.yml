@@ -43,6 +43,11 @@ jobs:
         run: mix test
       - name: Static analysis
         run: mix dialyzer
+      - name: Coverage report
+        env:
+          MIX_ENV: test
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mix coveralls.github
       - name: Credo advices as PR comments
         uses: red-shirts/reviewdog-action-credo@v1
         with:
