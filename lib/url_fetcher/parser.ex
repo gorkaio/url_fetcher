@@ -64,7 +64,7 @@ defmodule UrlFetcher.Parser do
     |> Enum.filter(&is_internal(&1, base_url))
   end
 
-  defp filter_internal(urls, base_url, _), do: urls
+  defp filter_internal(urls, _base_url, _), do: urls
 
   defp is_internal(url, base_url) do
     %{host: url_host} = URI.parse(url)
