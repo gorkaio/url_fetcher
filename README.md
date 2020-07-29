@@ -38,7 +38,7 @@ Documentation can be found at [https://hexdocs.pm/url_fetcher/](https://hexdocs.
 
 ## Contributing
 
-Please have a look at the [contributing guidelines](https://github.com/gorkaio/url_fetcher/CONTRIBUTING.md).
+Please have a look at the [contributing guidelines](CONTRIBUTING.md).
 
 _Url Fetcher_ has some automated CI Github actions that will take care of reviewing any pull request:
 
