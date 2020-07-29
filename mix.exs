@@ -5,7 +5,7 @@ defmodule Fetcher.MixProject do
   def project do
     [
       app: :url_fetcher,
-      version: "0.2.0",
+      version: "0.2.1",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -54,6 +54,7 @@ defmodule Fetcher.MixProject do
       {:ex_doc, "~> 0.22", only: :dev, runtime: false},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:benchee, "~> 1.0", only: :dev},
       {:plug_cowboy, "~> 2.0"},
       {:httpoison, "~> 1.6"},
       {:floki, "~> 0.27.0"}

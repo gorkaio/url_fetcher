@@ -29,7 +29,7 @@ by adding `url_fetcher` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:url_fetcher, "~> 0.1.1"}
+    {:url_fetcher, "~> 0.2.1"}
   ]
 end
 ```
@@ -44,7 +44,11 @@ _Url Fetcher_ has some automated CI Github actions that will take care of review
 
 - Check code formatting
 - Check tests pass
-- Checfk static analysis with dialyzer
+- Check static analysis with dialyzer
 - Submit any code style suggestions and improvements as comments on the PR
 
 Once everything looks good, your PR will be merged. Every push to the main branch will trigger an automated publishing of the package and documentation to [hex](https://hex.pm).
+
+### Benchmarking
+
+In order to improve performance it is important to actually benchmark the code. _UrlFetcher_ uses [benchee](https://hex.pm/packages/benchee) for than. Have a look at [benchmark.exs](bin/benchmark.exs) and compare your implementation against the current code before submitting a pull request. Run the benchmark with `mix run bin/benchmark.exs <url>`.
